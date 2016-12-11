@@ -1,2 +1,7 @@
 **/.merlin
 **/*.sh
+**/*.cmi
+**/*.cmx
+**/*.o
+tests/
+build/
