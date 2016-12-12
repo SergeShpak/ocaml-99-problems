@@ -1,5 +1,21 @@
 open OUnit2;;
 
+let list_to_string (l: string list) =
+  let print_string_symb (str: string) =
+    "\"" ^ str ^ "\""
+    in
+  let rec aux (l: string list) (acc: string) = match l with
+      [] -> acc
+    | [el] -> acc ^ (print_string_symb el)
+    | h :: t -> let expanded_acc = (acc ^ print_string_symb(h)) ^ " ; "
+      in aux t expanded_acc
+    in
+    let wrap_in_brackets (str : string) =
+      "[ " ^ str ^ " ]"
+    in
+    wrap_in_brackets (aux l "")
+;;
+
 let test_ListsLast_ReturnsLastElement ctx = 
   assert_equal (Some "d") (Lists.last [ "a" ; "b" ; "c" ; "d"])
 ;;
@@ -48,6 +64,41 @@ let test_ListsRev_EmptyListStaysSame ctx =
   assert_equal [] (Lists.rev [])
 ;;
 
+let test_ListsIsPalindrome_RecognizesPalindrome ctx =
+  let palindrome_to_check = ["x" ; "a" ; "m" ; "a" ; "x" ] 
+  and not_palindrome_to_check = [ "a" ; "b" ] in
+  assert_bool ((list_to_string palindrome_to_check) ^ " is not palindrome") 
+    (Lists.is_palindrome palindrome_to_check) ;
+  assert_equal false (Lists.is_palindrome not_palindrome_to_check)
+;;
+
+let test_ListsIsPalindrome_EmptyListIsNotPalindrome ctx =
+  assert_equal false (Lists.is_palindrome [])
+;;
+
+let test_ListsFlatten_FlattensList ctx =
+  let list_to_flatten = 
+    [ Lists.One "a" ; 
+      Lists.Many [ Lists.One "b" ; 
+                   Lists.Many [ Lists.One "c" ; Lists.One "d" ] ; 
+                   Lists.One "e" 
+                 ] 
+    ]
+  and expected_list = ["a"; "b"; "c"; "d"; "e"]
+  in
+  let flattened_list = Lists.flatten list_to_flatten
+  in 
+  assert_equal expected_list flattened_list
+;;
+
+let test_ListsCompress_CompressesList ctx =
+  let list_to_compress = 
+    ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"] 
+  and expected_list = ["a"; "b"; "c"; "a"; "d"; "e"]
+  in
+  let compressed_list = Lists.compress list_to_compress in
+  assert_equal expected_list compressed_list
+;;
 
 let suite = 
   "suite">:::
@@ -72,6 +123,14 @@ let suite =
         test_ListsRev_SingleElementListStaysSame ;
    "Lists.rev: Empty list stays the same">::
         test_ListsRev_EmptyListStaysSame ;
+   "Lists.is_palindrome: Recognizes a palindrome">::
+        test_ListsIsPalindrome_RecognizesPalindrome ;
+   "Lists.is_palindrome: Empty list is not a palindrome">::
+        test_ListsIsPalindrome_EmptyListIsNotPalindrome ;
+   "Lists.flatten: Flattens list">::
+        test_ListsFlatten_FlattensList ;
+   "Lists.compress: Compresses list">::
+        test_ListsCompress_CompressesList ;
   ]
 ;;
 
