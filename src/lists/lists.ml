@@ -1,12 +1,14 @@
 type 'a node =
     | One of 'a
     | Many of 'a node list
-;;
 
-let rec print_list (l: 'a list) = match l with
-    [] -> print_endline
-  | [el] -> print_string el ; print_endline
-  | h :: t -> print_string h ; print_string " "; print_list t
+let list_to_string f (l: 'a list) =
+  let rec elems_to_string (l: 'a list) (acc: string list) =
+    match l with
+      [] -> String.concat "; " acc
+    | el::r -> elems_to_string r ([f el] @ acc)
+  in
+  "[" ^ elems_to_string l [] ^ "]"
 ;;
 
 let rec last (l: 'a list) = match l with
@@ -75,3 +77,22 @@ let compress (l: 'a list) =
   in
   List.rev (aux l [])
 ;;
+
+let pack (l: 'a list) =
+  let rec aux (l: 'a list) (acc: 'a list list) (curr_sublist: 'a list) = 
+    match l with
+      [] -> acc @ [curr_sublist]
+    | h :: t -> match curr_sublist with
+        [] -> aux t acc [h]
+      | sublist_h :: sublist_t -> 
+        if sublist_h = h then aux t acc (h :: curr_sublist) 
+                            else aux (h::t) (acc @ [curr_sublist]) []
+  in
+  aux l [] []
+;;
+
+let main () =
+    () 
+;; 
+
+main();;

@@ -3,5 +3,7 @@
 **/*.cmi
 **/*.cmx
 **/*.o
+**/*.swp
+**/*.cmo
 tests/
 build/

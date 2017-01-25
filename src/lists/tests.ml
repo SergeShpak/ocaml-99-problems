@@ -100,6 +100,16 @@ let test_ListsCompress_CompressesList ctx =
   assert_equal expected_list compressed_list
 ;;
 
+let test_ListsPack_PacksList ctx =
+  let list_to_pack =
+    ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"d";"e";"e";"e";"e"]
+  and expected_list = [["a"; "a"; "a"; "a"]; ["b"]; ["c"; "c"]; ["a"; "a"]; 
+                       ["d"; "d"]; ["e"; "e"; "e"; "e"]]
+  in
+  let packed_list = Lists.pack list_to_pack in
+  assert_equal expected_list packed_list
+;;
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
@@ -131,6 +141,8 @@ let suite =
         test_ListsFlatten_FlattensList ;
    "Lists.compress: Compresses list">::
         test_ListsCompress_CompressesList ;
+   "Lists.pack: Packs list">::
+        test_ListsPack_PacksList ;
   ]
 ;;
 

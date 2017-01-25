@@ -11,3 +11,4 @@ val rev : 'a list -> 'a list;;
 val is_palindrome : 'a list -> bool;;
 val flatten : 'a node list -> 'a list;;
 val compress : 'a list -> 'a list;;
+val pack : 'a list -> 'a list list;;
