@@ -33,10 +33,10 @@ tests:
 	ocamlfind ocamlopt -package oUnit -o $(TESTS_DIR)/$(TESTS_EXEC) -linkpkg -g $(LISTS_SOURCES) $(TESTS_SOURCES)
 
 directories:
-	mkdir -p $(TESTS_DIR)
 	mkdir -p $(BUILD_DIR)
 
 clean:
-	rm -f *.cmi *.cmx *.cmo *.o $(LISTS_EXEC)
-	rm -rf $(TESTS_DIR)
-	rm -rf $(BUILD_DIR)
+	-rm -f *.cmi *.cmx *.cmo *.o $(LISTS_EXEC)
+	-rm *.log *.cache
+	-rm -rf $(TESTS_DIR)
+	-rm -rf $(BUILD_DIR)

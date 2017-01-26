@@ -110,6 +110,17 @@ let test_ListsPack_PacksList ctx =
   assert_equal expected_list packed_list
 ;;
 
+let test_ListsEncode_PerformsLengthEncoding ctx =
+  let list_to_encode = 
+    ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
+  and expected_list = 
+    [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]
+  in
+  let encoded_list = Lists.encode list_to_encode
+  in
+  assert_equal expected_list encoded_list
+;;
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
@@ -143,6 +154,8 @@ let suite =
         test_ListsCompress_CompressesList ;
    "Lists.pack: Packs list">::
         test_ListsPack_PacksList ;
+   "Lists.encode: Performs length encoding of a list">::
+        test_ListsEncode_PerformsLengthEncoding;
   ]
 ;;
 

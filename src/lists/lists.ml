@@ -5,10 +5,16 @@ type 'a node =
 let list_to_string f (l: 'a list) =
   let rec elems_to_string (l: 'a list) (acc: string list) =
     match l with
-      [] -> String.concat "; " acc
-    | el::r -> elems_to_string r ([f el] @ acc)
+      [] -> String.concat "; " (List.rev acc)
+    | el::r -> elems_to_string r ((f el) :: acc)
   in
   "[" ^ elems_to_string l [] ^ "]"
+;;
+
+let int_str_tuple_to_string (t: (int * string)) =
+  let (f, s) = t in
+  let string_parts = ["("; string_of_int f; ", "; s; ")"] in
+  String.concat "" string_parts
 ;;
 
 let rec last (l: 'a list) = match l with
@@ -91,8 +97,19 @@ let pack (l: 'a list) =
   aux l [] []
 ;;
 
+let encode (l: 'a list) =
+  let rec encode_packed (l: 'a list list) (aux: (int * 'a) list) =
+    match l with
+      li :: rest ->
+      let len = List.length li in
+      encode_packed rest ((len, (List.hd li)) :: aux)
+    | [] -> (rev aux)
+  in
+  encode_packed (pack l) []
+;;
+
 let main () =
-    () 
+  ()
 ;; 
 
 main();;
