@@ -1,6 +1,12 @@
 type 'a node =
     | One of 'a
     | Many of 'a node list
+;;
+
+type 'a rle =
+  | RLEOne of 'a
+  | RLEMany of (int * 'a)
+;;
 
 let list_to_string f (l: 'a list) =
   let rec elems_to_string (l: 'a list) (acc: string list) =
@@ -98,14 +104,46 @@ let pack (l: 'a list) =
 ;;
 
 let encode (l: 'a list) =
-  let rec encode_packed (l: 'a list list) (aux: (int * 'a) list) =
-    match l with
-      li :: rest ->
-      let len = List.length li in
-      encode_packed rest ((len, (List.hd li)) :: aux)
-    | [] -> (rev aux)
+  let rec aux (l: 'a list) (acc: 'a rle list) (cur: 'a rle option) =
+    match l with 
+      [] -> begin
+                match cur with 
+              Some c -> c :: acc 
+            | None -> acc
+      end
+    | el :: rest -> 
+      begin
+        match cur with 
+          None -> aux rest acc (Some (RLEOne el))
+        | Some (RLEOne e) -> 
+          if e = el then
+            aux rest acc (Some (RLEMany (2, e)))
+          else
+            let new_el = RLEOne e in
+            aux rest (new_el :: acc) (Some (RLEOne el)) 
+        | Some (RLEMany (count, e)) ->
+          if e = el then
+            aux rest acc (Some (RLEMany (count + 1, e)))
+          else
+            let new_el = RLEMany (count, e) in
+            aux rest (new_el :: acc) (Some (RLEOne el))
+      end 
   in
-  encode_packed (pack l) []
+  let rec encoding_packed (l: 'a list list) (acc: 'a rle list) =
+    match l with
+      li :: rest -> let len = List.length li in
+      let head = List.hd li in
+      if len = 1 then
+        encoding_packed rest ((RLEOne head) :: acc)
+      else
+        encoding_packed rest ((RLEMany (len, head)) :: acc)
+    | [] -> rev acc 
+  in
+  List.rev (aux l [] None)  
+;;
+
+let decode(l: 'a rle list) =
+  ()
 ;;
 
 let main () =

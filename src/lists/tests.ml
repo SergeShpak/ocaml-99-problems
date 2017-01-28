@@ -110,16 +110,33 @@ let test_ListsPack_PacksList ctx =
   assert_equal expected_list packed_list
 ;;
 
-let test_ListsEncode_PerformsLengthEncoding ctx =
+let test_ListsEncode_PerformsRLEncoding ctx =
   let list_to_encode = 
     ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
   and expected_list = 
-    [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]
+    [Lists.RLEMany (4, "a"); Lists.RLEOne "b"; Lists.RLEMany(2, "c"); 
+    Lists.RLEMany(2, "a"); Lists.RLEOne "d"; Lists.RLEMany (4, "e")]
   in
   let encoded_list = Lists.encode list_to_encode
   in
   assert_equal expected_list encoded_list
 ;;
+
+(*
+let test_ListsDecode_PerformsRLDecoding ctx =
+  let list_to_decode = 
+    [Lists.RLEMany (4, "a"); Lists.RLEOne "b"; Lists.RLEMany(2, "c"); 
+     Lists.RLEMany(2, "a"); Lists.RLEOne "d"; Lists.RLEMany (4, "e")]
+  in
+  let expected_list = 
+    ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
+  in
+  let decoded_list = Lists.decode list_to_decode
+  in
+  assert_equal expected_list decoded_list
+;;
+
+   *)
 
 let suite = 
   "suite">:::
@@ -154,8 +171,10 @@ let suite =
         test_ListsCompress_CompressesList ;
    "Lists.pack: Packs list">::
         test_ListsPack_PacksList ;
-   "Lists.encode: Performs length encoding of a list">::
-        test_ListsEncode_PerformsLengthEncoding;
+   "Lists.encode: Performs a run-length encoding of a list">::
+        test_ListsEncode_PerformsRLEncoding;
+   (*"Lists.decode: Performs run-length decoding of a list">::
+        test_ListsDecode_PerformsRLDecoding; *)
   ]
 ;;
 
