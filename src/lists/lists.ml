@@ -205,6 +205,23 @@ let drop (l: 'a list) (index: int) =
   aux l [] 1
 
 
+let split (l: 'a list) (first_part_length: int) = 
+
+  let rec aux (l: 'a list) (acc: 'a list) (counter: int) =
+    if counter <= 0 then
+      ((rev acc), l)
+    else
+      match l with
+        [] -> ((rev acc), [])
+      | [el] -> ((rev (el::acc)), [])
+      | h :: el -> aux el (h :: acc) (counter - 1)
+  in
+  if (first_part_length <= 0) then
+    ([], l)
+  else
+    aux l [] first_part_length
+
+
 let main () =
   ()
 ;; 

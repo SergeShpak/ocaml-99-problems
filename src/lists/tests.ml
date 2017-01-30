@@ -190,6 +190,38 @@ let test_ListsDrop_IfIndexIsBiggerThanLengthReturnsSameList ctx =
   assert_equal expected_list result
 
 
+let test_ListsSplit_SplitsNormally ctx =
+  let list_to_split = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
+  first_part_length = 3 and
+  expected_result = (["a"; "b"; "c"], ["d"; "e"; "f"; "g"; "h"; "i"; "j"]) in
+  let result = Lists.split list_to_split first_part_length in
+  assert_equal expected_result result
+
+
+let test_ListsSplit_IfLengthBiggerReturnsFullEmpty ctx =
+  let list_to_split = ["a";"b";"c"] and
+  first_part_length = 4 and
+  expected_result = (["a";"b";"c"], []) in
+  let result = Lists.split list_to_split first_part_length in
+  assert_equal expected_result result
+
+
+let test_ListsSplit_IfLengthNegativeReturnsEmptyFull ctx = 
+  let list_to_split = ["a";"b";"c"] and
+  first_part_length = -1 and
+  expected_result = ([], ["a";"b";"c"]) in
+  let result = Lists.split list_to_split first_part_length in
+  assert_equal expected_result result
+
+
+let test_ListsSplit_IfLengthZeroReturnsEmptyFull ctx = 
+  let list_to_split = ["a";"b";"c"] and
+  first_part_length = 0 and
+  expected_result = ([], ["a";"b";"c"]) in
+  let result = Lists.split list_to_split first_part_length in
+  assert_equal expected_result result
+
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
@@ -242,6 +274,17 @@ let suite =
         test_ListsDrop_IfNegIndexReturnsSameList;
     "Lists.drop: If index is out of bound, returns the same list">::
         test_ListsDrop_IfIndexIsBiggerThanLengthReturnsSameList;
+    "Lists.split: Splits normally">::
+        test_ListsSplit_SplitsNormally;
+    "Lists.split: If first part length is bigger than the length of list, "
+    ^ "returns the same and an empty list">::
+        test_ListsSplit_IfLengthBiggerReturnsFullEmpty;
+   "Lists.split: If first part length is negative, returns an empty and the "
+   ^ "same list">::
+        test_ListsSplit_IfLengthNegativeReturnsEmptyFull;
+    "Lists.split: If first part length is zero, returns an empty and the "
+    ^ "same list">::
+        test_ListsSplit_IfLengthZeroReturnsEmptyFull;
   ]
 ;;
 
