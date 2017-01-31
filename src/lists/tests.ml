@@ -222,6 +222,59 @@ let test_ListsSplit_IfLengthZeroReturnsEmptyFull ctx =
   assert_equal expected_result result
 
 
+let test_ListsSlice_SlicesNormally ctx =
+  let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
+  start_ind = 2 and end_ind = 6 and
+  expected_result = ["c"; "d"; "e"; "f"; "g"] in
+  let result = Lists.slice list_to_slice start_ind end_ind in
+  assert_equal expected_result result
+
+
+let test_ListsSlice_IfStartEndEqualReturnsSingleEl ctx =
+  let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
+  start_ind = 6 and end_ind = 6 and
+  expected_result = ["g"] in
+  let result = Lists.slice list_to_slice start_ind end_ind in
+  assert_equal expected_result result
+
+
+let test_ListsSlice_IfStartGreaterEndSwaps ctx =
+  let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
+  start_ind = 6 and end_ind = 2 and
+  expected_result = ["c"; "d"; "e"; "f"; "g"] in
+  let result = Lists.slice list_to_slice start_ind end_ind in
+  assert_equal expected_result result
+
+
+let test_ListsSlice_IfNegIndexIsDifferenceFromRear ctx =
+  let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
+  start_ind = -1 and end_ind = -4 and
+  expected_result = ["g";"h";"i";"j"] in
+  let result = Lists.slice  list_to_slice start_ind end_ind in
+  assert_equal expected_result result
+
+
+let test_ListsSlice_IfEndOutOfBoundReturnsEndOfList ctx =
+  let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
+  start_ind = 7 and end_ind = 12 and
+  expected_result = ["h";"i";"j"] in
+  let result = Lists.slice  list_to_slice start_ind end_ind in
+  assert_equal expected_result result
+    
+
+let test_ListsSlice_GettingASliceOutOfBoundYieldsEmpty ctx =
+  let list_to_slice = ["a";"b";"c"] and
+  first_start_ind = -6 and first_end_ind = -5 and
+  first_expected_result = [] and
+  second_start_ind = 4 and second_end_ind = 7 and
+  second_expected_result = [] in
+  let first_result = Lists.slice list_to_slice first_start_ind first_end_ind 
+  and second_result = Lists.slice list_to_slice second_start_ind second_end_ind
+  in
+  assert_equal first_expected_result first_result ;
+  assert_equal second_expected_result second_result
+
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
@@ -285,6 +338,23 @@ let suite =
     "Lists.split: If first part length is zero, returns an empty and the "
     ^ "same list">::
         test_ListsSplit_IfLengthZeroReturnsEmptyFull;
+   "Lists.slice: Slices normally">::
+        test_ListsSlice_SlicesNormally;
+   "Lists.slice: If indices are equal returns a single element list with the "
+   ^ "single element A[start_ind]">::
+        test_ListsSlice_IfStartEndEqualReturnsSingleEl;
+   "Lists.slice: If start is bigger than end swaps indices and splices "
+   ^ "normally">::
+        test_ListsSlice_IfStartGreaterEndSwaps;
+    "Lists.slice: If an index is negative, it is considered to be equal to "
+    ^ "the difference between the list length and the absolute value of the "
+    ^ "index">::
+        test_ListsSlice_IfNegIndexIsDifferenceFromRear;
+    "Lists.slice: If an end index is out of bound, returns "
+    ^ "A[start_ind]..A[length - 1]">::
+        test_ListsSlice_IfEndOutOfBoundReturnsEndOfList;
+   "Lists.slice: If indices are out of bound, returs empty list">::
+        test_ListsSlice_GettingASliceOutOfBoundYieldsEmpty;
   ]
 ;;
 

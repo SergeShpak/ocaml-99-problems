@@ -21,3 +21,4 @@ val duplicate : 'a list -> 'a list
 val replicate : 'a list -> int -> 'a list
 val drop : 'a list -> int -> 'a list
 val split : 'a list -> int -> ('a list * 'a list)
+val slice : 'a list -> int -> int -> 'a list

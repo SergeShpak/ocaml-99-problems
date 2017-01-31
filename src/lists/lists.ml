@@ -222,6 +222,39 @@ let split (l: 'a list) (first_part_length: int) =
     aux l [] first_part_length
 
 
+let slice (l: 'a list) (start_ind: int) (end_ind: int) =
+
+  let rec skip_n (l: 'a list) (n: int) =
+    if n <= 0 then l else
+    match l with
+      [] -> []
+    | h :: t -> skip_n t (n - 1)
+  in
+
+  let rec get_n (l: 'a list) (n: int) (acc: 'a list) =
+    if n <= 0 then rev acc else
+    match l with
+      [] -> acc
+    | h :: t -> get_n t (n - 1) (h :: acc)
+  in
+
+  let rec get_indices_pair (start_ind: int) (end_ind: int) (len: int) =
+    if (start_ind < 0) then
+      get_indices_pair (len - start_ind) end_ind len else
+    if (end_ind < 0) then
+      get_indices_pair start_ind (len - end_ind) len else
+    if (start_ind > end_ind && start_ind >= 0) then
+      get_indices_pair end_ind start_ind len else
+    (start_ind, end_ind)
+  in
+
+  let indices = get_indices_pair start_ind end_ind (List.length l) in
+  let start_ind = fst indices and end_ind = snd indices in
+  if end_ind < 0 then [] else
+  if start_ind < 0 then get_n l end_ind [] else
+  get_n (skip_n l start_ind) end_ind []
+
+
 let main () =
   ()
 ;; 
