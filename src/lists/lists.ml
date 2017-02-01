@@ -258,6 +258,41 @@ let slice (l: 'a list) (start_ind: int) (end_ind: int) =
   get_n (skip_n l start_ind) (end_ind - start_ind) []
 
 
+let rec rotate (l: 'a list) (rot_ind: int) =
+  let rec left_rot (l: 'a list) (rot_ind: int) (acc: 'a list) =
+    match l with
+      [] -> rev acc
+    | h :: t -> if rot_ind = 0 then (l @ (rev acc))
+      else left_rot t (rot_ind - 1) (h :: acc)
+  in
+    
+  let rec right_rot (l: 'a list) (rot_ind: int) (acc: 'a list) =
+    rev (left_rot (rev l) rot_ind acc)
+  in 
+
+  let list_len = List.length l in
+  let norm_rot_ind = rot_ind mod list_len in
+  if norm_rot_ind = 0 then l else 
+  if norm_rot_ind < 0 then rotate l (norm_rot_ind + list_len) else
+  if norm_rot_ind > list_len / 2 then right_rot l (list_len - norm_rot_ind) [] 
+  else
+  left_rot l norm_rot_ind []
+
+
+let remove_at (pos: int) (l: 'a list) =
+  let rec aux (l: 'a list) (count: int) (acc: 'a list) =
+    match l with
+      [] -> rev acc
+    | h :: t -> if count = 0 then (rev acc) @ t
+      else aux t (count - 1) (h :: acc)
+  in
+
+  let list_len = List.length l in
+  let pos = if pos < 0 then list_len + pos else pos in
+  if pos < 0 || pos > (list_len - 1) then l
+  else aux l pos []
+
+
 let main () =
   ()
 ;; 

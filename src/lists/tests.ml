@@ -229,14 +229,12 @@ let test_ListsSlice_SlicesNormally ctx =
   let result = Lists.slice list_to_slice start_ind end_ind in
   assert_equal expected_result result
 
-
 let test_ListsSlice_IfStartEndEqualReturnsSingleEl ctx =
   let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
   start_ind = 6 and end_ind = 6 and
   expected_result = ["g"] in
   let result = Lists.slice list_to_slice start_ind end_ind in
   assert_equal expected_result result
-
 
 let test_ListsSlice_IfStartGreaterEndSwaps ctx =
   let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
@@ -245,14 +243,12 @@ let test_ListsSlice_IfStartGreaterEndSwaps ctx =
   let result = Lists.slice list_to_slice start_ind end_ind in
   assert_equal expected_result result
 
-
 let test_ListsSlice_IfNegIndexIsDifferenceFromRear ctx =
   let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
   start_ind = -1 and end_ind = -4 and
   expected_result = ["g";"h";"i";"j"] in
   let result = Lists.slice  list_to_slice start_ind end_ind in
   assert_equal expected_result result
-
 
 let test_ListsSlice_IfEndOutOfBoundReturnsEndOfList ctx =
   let list_to_slice = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] and
@@ -261,7 +257,6 @@ let test_ListsSlice_IfEndOutOfBoundReturnsEndOfList ctx =
   let result = Lists.slice  list_to_slice start_ind end_ind in
   assert_equal expected_result result
     
-
 let test_ListsSlice_GettingASliceOutOfBoundYieldsEmpty ctx =
   let list_to_slice = ["a";"b";"c"] and
   first_start_ind = -6 and first_end_ind = -5 and
@@ -273,6 +268,56 @@ let test_ListsSlice_GettingASliceOutOfBoundYieldsEmpty ctx =
   in
   assert_equal first_expected_result first_result ;
   assert_equal second_expected_result second_result
+
+
+let test_ListsRotate_RotatesCorrectly ctx =
+  let list_to_rotate = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] and
+  first_rot_ind = 3 and second_rot_ind = 7 and
+  first_expected_result = ["d"; "e"; "f"; "g"; "h"; "a"; "b"; "c"] and
+  second_expected_result =  ["h"; "a"; "b"; "c"; "d"; "e"; "f"; "g"] in
+  let first_result = Lists.rotate list_to_rotate first_rot_ind and
+  second_result = Lists.rotate list_to_rotate second_rot_ind in
+  assert_equal first_expected_result first_result ;
+  assert_equal second_expected_result second_result
+
+let test_ListsRotate_RotatesInOtherDirectionWhenNegIndex ctx =
+  let list_to_rotate = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] and
+  rot_ind = (-2) and big_rot_ind = (-10) and
+  expected_result = ["g"; "h"; "a"; "b"; "c"; "d"; "e"; "f"] in
+  let result = Lists.rotate list_to_rotate rot_ind and
+  second_result = Lists.rotate list_to_rotate big_rot_ind in
+  assert_equal expected_result result ;
+  assert_equal expected_result second_result
+
+let test_ListsRotate_IfIndexZeroReturnsOriginal ctx =
+  let list_to_rotate = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] and
+  rot_ind = 0 and
+  expected_result =  ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] in
+  let result = Lists.rotate list_to_rotate rot_ind in
+  assert_equal expected_result result
+
+
+let test_ListsRemoveAt_RemovesCorrectly ctx =
+  let list_to_alter = ["a";"b";"c";"d"] and
+  ind = 1 in
+  let expected_result = ["a";"c";"d"] and
+  result = Lists.remove_at ind list_to_alter in
+  assert_equal expected_result result
+
+let test_ListsRemoveAt_CountsFromRearIfNegativePos ctx =
+  let list_to_alter = ["a";"b";"c";"d"] and
+  ind = -2 and
+  expected_result = ["a";"b";"d"] in
+  let result = Lists.remove_at ind list_to_alter in
+  assert_equal expected_result result
+
+let test_ListsRemoveAt_ReturnsOriginalIfIndexOutOfBound ctx =
+  let list_to_alter = ["a";"b";"c";"d"] and
+  neg_ind = -5 and pos_ind = 4 in
+  let first_result = Lists.remove_at neg_ind list_to_alter and
+  second_result = Lists.remove_at pos_ind list_to_alter in
+  assert_equal list_to_alter first_result ;
+  assert_equal list_to_alter second_result
 
 
 let suite = 
@@ -355,6 +400,20 @@ let suite =
         test_ListsSlice_IfEndOutOfBoundReturnsEndOfList;
    "Lists.slice: If indices are out of bound, returs empty list">::
         test_ListsSlice_GettingASliceOutOfBoundYieldsEmpty;
+   "Lists.rotate: Rotate normally">::
+        test_ListsRotate_RotatesCorrectly;
+   "Lists.rotate: If rotation index is negative, rotates in a different "
+    ^ "direction">::
+        test_ListsRotate_RotatesInOtherDirectionWhenNegIndex;
+   "Lists.rotate: If rotation index is zero, returns the original list">::
+        test_ListsRotate_IfIndexZeroReturnsOriginal;
+   "Lists.remove_at: Removes correctly">::
+        test_ListsRemoveAt_RemovesCorrectly;
+   "Lists.remove_at: If negative position is passed, element is searched "
+   ^ "from rear">::
+        test_ListsRemoveAt_CountsFromRearIfNegativePos;
+   "Lists.remove_at: If index is out of bound, returns original list">::
+        test_ListsRemoveAt_ReturnsOriginalIfIndexOutOfBound;
   ]
 ;;
 
