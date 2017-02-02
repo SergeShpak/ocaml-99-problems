@@ -293,6 +293,20 @@ let remove_at (pos: int) (l: 'a list) =
   else aux l pos []
 
 
+let insert_at (pos: int) (el: 'a) (l: 'a list) =
+  let rec aux (count: int) (l: 'a list) (acc: 'a list) =
+    match l with 
+      [] -> if count = 0 then rev (el :: acc) else rev acc
+    | h :: t -> 
+      if count = 0 then aux (count - 1) t (h :: (el :: acc)) else
+      if count < 0 then aux count t (h :: acc) 
+      else aux (count - 1) t (h :: acc)
+  in
+  let pos = if pos >= 0 then pos
+    else let list_len = List.length l in (list_len + 1) + pos in
+  aux pos l [] 
+
+
 let main () =
   ()
 ;; 

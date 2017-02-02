@@ -314,10 +314,49 @@ let test_ListsRemoveAt_CountsFromRearIfNegativePos ctx =
 let test_ListsRemoveAt_ReturnsOriginalIfIndexOutOfBound ctx =
   let list_to_alter = ["a";"b";"c";"d"] and
   neg_ind = -5 and pos_ind = 4 in
-  let first_result = Lists.remove_at neg_ind list_to_alter and
-  second_result = Lists.remove_at pos_ind list_to_alter in
+  let clos ind = Lists.remove_at ind list_to_alter in
+  let first_result = clos neg_ind and
+  second_result = clos pos_ind in
   assert_equal list_to_alter first_result ;
   assert_equal list_to_alter second_result
+
+
+let test_ListsInsertAt_InsertsCorrectly ctx = 
+  let list_to_alter = ["a";"b";"c";"d"] and
+  ind = 2 and el = "x" and
+  expected_result = ["a";"b";"x";"c";"d"] in
+  let result = Lists.insert_at ind el list_to_alter in
+  assert_equal expected_result result
+
+let test_ListsInsertAt_LookForNegativeIndexFromRear ctx =
+  let list_to_alter = ["a";"b";"c";"d"] and
+  el = "x" and first_ind = -1 and 
+  first_expected_result = ["a";"b";"c";"d";"x"] and 
+  second_ind = -3 and second_expected_result = ["a";"b";"x";"c";"d"] and
+  third_ind = -5 and third_expected_result =  ["x";"a";"b";"c";"d"] in
+  let clos ind = Lists.insert_at ind el list_to_alter in
+  let first_result = clos first_ind and
+  second_result = clos second_ind and
+  third_result = clos third_ind in 
+  assert_equal first_expected_result first_result ;
+  assert_equal second_expected_result second_result ;
+  assert_equal third_expected_result third_result
+
+let test_ListsInsertAt_ReturnOriginalIfIndexOutOfBound ctx =
+  let list_to_alter = ["a";"b";"c";"d"] and
+  el = "x" and first_ind = 5 and second_ind = -6 in
+  let clos ind = Lists.insert_at ind el list_to_alter in
+  let first_result = clos first_ind and
+  second_result = clos second_ind in
+  assert_equal list_to_alter first_result ;
+  assert_equal list_to_alter second_result
+
+let test_ListsInsertAt_InsertsAtTheEndOfTheList ctx =
+  let list_to_alter = ["a";"b";"c";"d"] and
+  ind = 4 and el = "x" and
+  expected_result = ["a";"b";"c";"d";"x"] in
+  let result = Lists.insert_at ind el list_to_alter in
+  assert_equal expected_result result
 
 
 let suite = 
@@ -414,6 +453,17 @@ let suite =
         test_ListsRemoveAt_CountsFromRearIfNegativePos;
    "Lists.remove_at: If index is out of bound, returns original list">::
         test_ListsRemoveAt_ReturnsOriginalIfIndexOutOfBound;
+   "Lists.insert_at: Inserts correctly">::
+        test_ListsInsertAt_InsertsCorrectly ;
+   "Lists.insert_at: If index is negative, counts index from the rear of the "
+   ^ "list">::
+        test_ListsInsertAt_LookForNegativeIndexFromRear ;
+   "Lists.insert_at: If index is out of bound, returns a new list indentical "
+   ^ "to the original">::
+        test_ListsInsertAt_ReturnOriginalIfIndexOutOfBound ;
+   "Lists.insert_at: If index is equal to (-1), appends the element to the "
+   ^ "rear of the list">::
+        test_ListsInsertAt_InsertsAtTheEndOfTheList ;
   ]
 ;;
 

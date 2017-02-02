@@ -1,9 +1,19 @@
+# files of merlin, OCaml completion system for vim
 **/.merlin
+
+# shell scripts
 **/*.sh
+
+# ocaml files generated during compilation
 **/*.cmi
 **/*.cmx
 **/*.o
-**/*.swp
 **/*.cmo
+
+# vim swap files
+**/*.swp
+**/*.swo
+
+# directories created and filled during compilation
 tests/
 build/
