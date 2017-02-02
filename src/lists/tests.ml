@@ -325,7 +325,7 @@ let test_ListsInsertAt_InsertsCorrectly ctx =
   let list_to_alter = ["a";"b";"c";"d"] and
   ind = 2 and el = "x" and
   expected_result = ["a";"b";"x";"c";"d"] in
-  let result = Lists.insert_at ind el list_to_alter in
+  let result = Lists.insert_at el ind list_to_alter in
   assert_equal expected_result result
 
 let test_ListsInsertAt_LookForNegativeIndexFromRear ctx =
@@ -334,7 +334,7 @@ let test_ListsInsertAt_LookForNegativeIndexFromRear ctx =
   first_expected_result = ["a";"b";"c";"d";"x"] and 
   second_ind = -3 and second_expected_result = ["a";"b";"x";"c";"d"] and
   third_ind = -5 and third_expected_result =  ["x";"a";"b";"c";"d"] in
-  let clos ind = Lists.insert_at ind el list_to_alter in
+  let clos ind = Lists.insert_at el ind list_to_alter in
   let first_result = clos first_ind and
   second_result = clos second_ind and
   third_result = clos third_ind in 
@@ -345,7 +345,7 @@ let test_ListsInsertAt_LookForNegativeIndexFromRear ctx =
 let test_ListsInsertAt_ReturnOriginalIfIndexOutOfBound ctx =
   let list_to_alter = ["a";"b";"c";"d"] and
   el = "x" and first_ind = 5 and second_ind = -6 in
-  let clos ind = Lists.insert_at ind el list_to_alter in
+  let clos ind = Lists.insert_at el ind list_to_alter in
   let first_result = clos first_ind and
   second_result = clos second_ind in
   assert_equal list_to_alter first_result ;
@@ -355,7 +355,7 @@ let test_ListsInsertAt_InsertsAtTheEndOfTheList ctx =
   let list_to_alter = ["a";"b";"c";"d"] and
   ind = 4 and el = "x" and
   expected_result = ["a";"b";"c";"d";"x"] in
-  let result = Lists.insert_at ind el list_to_alter in
+  let result = Lists.insert_at el ind list_to_alter in
   assert_equal expected_result result
 
 

@@ -293,7 +293,7 @@ let remove_at (pos: int) (l: 'a list) =
   else aux l pos []
 
 
-let insert_at (pos: int) (el: 'a) (l: 'a list) =
+let insert_at (el: 'a) (pos: int) (l: 'a list) =
   let rec aux (count: int) (l: 'a list) (acc: 'a list) =
     match l with 
       [] -> if count = 0 then rev (el :: acc) else rev acc
