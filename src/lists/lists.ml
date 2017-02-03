@@ -307,6 +307,23 @@ let insert_at (el: 'a) (pos: int) (l: 'a list) =
   aux pos l [] 
 
 
+let range (start_number : int) (end_number : int) =
+
+  let decrement el = el - 1 and
+  increment el = el + 1 and
+  
+  aux (curr_number : int) (end_number : int) mod_func (acc: int list) =
+    let rec inner (curr_number : int) (acc : int list) =
+    if curr_number = end_number then (curr_number :: acc)
+    else inner (mod_func curr_number) (curr_number :: acc) in
+    inner curr_number acc in
+
+  if start_number > end_number then 
+    let mod_func = increment in aux end_number start_number mod_func []
+  else
+    let mod_func = decrement in aux end_number start_number mod_func []
+
+
 let main () =
   ()
 ;; 

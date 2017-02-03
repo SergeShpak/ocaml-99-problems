@@ -359,53 +359,79 @@ let test_ListsInsertAt_InsertsAtTheEndOfTheList ctx =
   assert_equal expected_result result
 
 
+let test_ListsRange_CreatesCorrectRange ctx =
+  let first_start = 4 and first_end = 9 and second_start = -2 and 
+  second_end = 2 and
+  first_expected_result = [4;5;6;7;8;9] and
+  second_expected_result = [-2;-1;0;1;2] in
+  let first_result = Lists.range first_start first_end and 
+  second_result = Lists.range second_start second_end in
+  assert_equal first_expected_result first_result ;
+  assert_equal second_expected_result second_result
+
+let test_ListsRange_IfStartGreaterThanEndCreatesReversedList ctx =
+  let first_start = 9 and first_end = 4 and second_start = 2 and 
+  second_end = -2 and
+  first_expected_result = [9;8;7;6;5;4] and
+  second_expected_result = [2;1;0;-1;-2] in
+  let first_result = Lists.range first_start first_end and 
+  second_result = Lists.range second_start second_end in
+  assert_equal first_expected_result first_result ;
+  assert_equal second_expected_result second_result 
+
+let test_ListsRange_IfStartEqualsEndReturnsListWithSingleElement ctx =
+  let s = 4 and e = 4 and
+  expected_result = [4] in
+  let result = Lists.range s e in
+  assert_equal expected_result result
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
-   "Lists.last: Returns 'None' if list is empty">:: 
+    "Lists.last: Returns 'None' if list is empty">:: 
         test_ListsLast_ReturnsNoneIfListIsEmpty ;
-   "Lists.last_two: Returns last two elements">:: 
+    "Lists.last_two: Returns last two elements">:: 
         test_ListsLastTwo_ReturnsLastTwoElements ;
-   "Lists.last_two: Returns None if list contains less than two elements">::
+    "Lists.last_two: Returns None if list contains less than two elements">::
         test_ListsLastTwo_ReturnsNoneIfListContainsLessThanTwoElements ;
-   "Lists.at: Return element at given position">::
+    "Lists.at: Return element at given position">::
         test_ListsAt_ReturnsElementAtGivenPosition ;
-   "Lists.at: Returns None if given index is out of bound">::
+    "Lists.at: Returns None if given index is out of bound">::
         test_ListsAt_ReturnsNoneIfIndexIsOutOfBound ;
-   "Lists.at: Returns None if list is empty">:: 
+    "Lists.at: Returns None if list is empty">:: 
         test_ListsAt_ReturnsNoneIfListIsEmpty ;
-   "Lists.length: Return number of elements in list">::
+    "Lists.length: Return number of elements in list">::
         test_ListsLength_ReturnsNumberOfElementsInList ;
-   "Lists.rev: Returns reversed list">::
+    "Lists.rev: Returns reversed list">::
         test_ListsRev_ReturnsReversedList ;
-   "Lists.rev: List that consist of a single element stays the same">::
+    "Lists.rev: List that consist of a single element stays the same">::
         test_ListsRev_SingleElementListStaysSame ;
-   "Lists.rev: Empty list stays the same">::
+    "Lists.rev: Empty list stays the same">::
         test_ListsRev_EmptyListStaysSame ;
-   "Lists.is_palindrome: Recognizes a palindrome">::
+    "Lists.is_palindrome: Recognizes a palindrome">::
         test_ListsIsPalindrome_RecognizesPalindrome ;
-   "Lists.is_palindrome: Empty list is not a palindrome">::
+    "Lists.is_palindrome: Empty list is not a palindrome">::
         test_ListsIsPalindrome_EmptyListIsNotPalindrome ;
-   "Lists.flatten: Flattens list">::
+    "Lists.flatten: Flattens list">::
         test_ListsFlatten_FlattensList ;
-   "Lists.compress: Compresses list">::
+    "Lists.compress: Compresses list">::
         test_ListsCompress_CompressesList ;
-   "Lists.pack: Packs list">::
+    "Lists.pack: Packs list">::
         test_ListsPack_PacksList ;
-   "Lists.encode: Performs a run-length encoding of a list">::
+    "Lists.encode: Performs a run-length encoding of a list">::
         test_ListsEncode_PerformsRLEncoding;
-   "Lists.encode: Returns empty list if passed list is empty">::
+    "Lists.encode: Returns empty list if passed list is empty">::
         test_ListsEncode_ReturnsEmptyListIfPassedListEmpty;
-   "Lists.decode: Performs run-length decoding of a list">::
+    "Lists.decode: Performs run-length decoding of a list">::
         test_ListsDecode_PerformsRLDecoding;
-   "Lists.duplicate: Duplicates list">::
+    "Lists.duplicate: Duplicates list">::
         test_ListsDuplicate_DuplicatesCorrectly;
     "Lists.replicate: Replicates list">::
         test_ListsReplicate_ReplicatesCorrectly;
-   "Lists.replicate: If list is replicated zero times, an empty list is" 
-   ^ "returned">::
+    "Lists.replicate: If list is replicated zero times, an empty list is" 
+    ^ "returned">::
         test_ListsReplicate_ZeroTimesYieldsEmptyList;
-   "Lists.drop: Drops correct element">::
+    "Lists.drop: Drops correct element">::
         test_ListsDrop_DropsCorrectElement;
     "Lists.drop: If index is negative, returns a duplicated list">::
         test_ListsDrop_IfNegIndexReturnsSameList;
@@ -416,19 +442,19 @@ let suite =
     "Lists.split: If first part length is bigger than the length of list, "
     ^ "returns the same and an empty list">::
         test_ListsSplit_IfLengthBiggerReturnsFullEmpty;
-   "Lists.split: If first part length is negative, returns an empty and the "
-   ^ "same list">::
+    "Lists.split: If first part length is negative, returns an empty and the "
+    ^ "same list">::
         test_ListsSplit_IfLengthNegativeReturnsEmptyFull;
     "Lists.split: If first part length is zero, returns an empty and the "
     ^ "same list">::
         test_ListsSplit_IfLengthZeroReturnsEmptyFull;
-   "Lists.slice: Slices normally">::
+    "Lists.slice: Slices normally">::
         test_ListsSlice_SlicesNormally;
-   "Lists.slice: If indices are equal returns a single element list with the "
-   ^ "single element A[start_ind]">::
+    "Lists.slice: If indices are equal returns a single element list with the "
+    ^ "single element A[start_ind]">::
         test_ListsSlice_IfStartEndEqualReturnsSingleEl;
-   "Lists.slice: If start is bigger than end swaps indices and splices "
-   ^ "normally">::
+    "Lists.slice: If start is bigger than end swaps indices and splices "
+    ^ "normally">::
         test_ListsSlice_IfStartGreaterEndSwaps;
     "Lists.slice: If an index is negative, it is considered to be equal to "
     ^ "the difference between the list length and the absolute value of the "
@@ -437,33 +463,41 @@ let suite =
     "Lists.slice: If an end index is out of bound, returns "
     ^ "A[start_ind]..A[length - 1]">::
         test_ListsSlice_IfEndOutOfBoundReturnsEndOfList;
-   "Lists.slice: If indices are out of bound, returs empty list">::
+    "Lists.slice: If indices are out of bound, returs empty list">::
         test_ListsSlice_GettingASliceOutOfBoundYieldsEmpty;
-   "Lists.rotate: Rotate normally">::
+    "Lists.rotate: Rotate normally">::
         test_ListsRotate_RotatesCorrectly;
-   "Lists.rotate: If rotation index is negative, rotates in a different "
+    "Lists.rotate: If rotation index is negative, rotates in a different "
     ^ "direction">::
         test_ListsRotate_RotatesInOtherDirectionWhenNegIndex;
-   "Lists.rotate: If rotation index is zero, returns the original list">::
+    "Lists.rotate: If rotation index is zero, returns the original list">::
         test_ListsRotate_IfIndexZeroReturnsOriginal;
-   "Lists.remove_at: Removes correctly">::
+    "Lists.remove_at: Removes correctly">::
         test_ListsRemoveAt_RemovesCorrectly;
-   "Lists.remove_at: If negative position is passed, element is searched "
-   ^ "from rear">::
+    "Lists.remove_at: If negative position is passed, element is searched "
+    ^ "from rear">::
         test_ListsRemoveAt_CountsFromRearIfNegativePos;
-   "Lists.remove_at: If index is out of bound, returns original list">::
+    "Lists.remove_at: If index is out of bound, returns original list">::
         test_ListsRemoveAt_ReturnsOriginalIfIndexOutOfBound;
-   "Lists.insert_at: Inserts correctly">::
+    "Lists.insert_at: Inserts correctly">::
         test_ListsInsertAt_InsertsCorrectly ;
-   "Lists.insert_at: If index is negative, counts index from the rear of the "
-   ^ "list">::
+    "Lists.insert_at: If index is negative, counts index from the rear of the "
+    ^ "list">::
         test_ListsInsertAt_LookForNegativeIndexFromRear ;
-   "Lists.insert_at: If index is out of bound, returns a new list indentical "
-   ^ "to the original">::
+    "Lists.insert_at: If index is out of bound, returns a new list indentical "
+    ^ "to the original">::
         test_ListsInsertAt_ReturnOriginalIfIndexOutOfBound ;
-   "Lists.insert_at: If index is equal to (-1), appends the element to the "
-   ^ "rear of the list">::
+    "Lists.insert_at: If index is equal to (-1), appends the element to the "
+    ^ "rear of the list">::
         test_ListsInsertAt_InsertsAtTheEndOfTheList ;
+    "Lists.range: Creates range normally">::
+        test_ListsRange_CreatesCorrectRange ;
+    "Lists.range: If start index is greater than the end index, creates a "
+    ^ "reversed list">::
+        test_ListsRange_IfStartGreaterThanEndCreatesReversedList ;
+    "Lists.range: If start is equal to end creates a list with a single "
+    ^ "element, equal to start">::
+        test_ListsRange_IfStartEqualsEndReturnsListWithSingleElement ;
   ]
 ;;
 
