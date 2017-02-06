@@ -27,6 +27,31 @@ let int_str_tuple_to_string (t: (int * string)) =
   String.concat "" string_parts
 
 
+let find_first (el: 'a) (l: 'a list) =
+    let rec aux (curr_ind: int) (li: 'a list) =
+      match li with
+        [] -> -1
+      | h :: t -> if h = el then curr_ind else aux (curr_ind + 1) t
+    in
+    aux 1 l
+
+
+let select_at (ind: int) (l: 'a list) =
+  let out_of_bound_msg = "Index is out of bound" in
+  if ind < 0 then raise (Failure out_of_bound_msg)
+  else
+    let rec aux (elements_left: int) (l: 'a list) =
+      match l with
+        [el] -> if elements_left = 1 then el
+        else raise (Failure out_of_bound_msg)
+      | h::t -> if elements_left = 1 then h else
+        if elements_left < 1 then raise (Failure out_of_bound_msg)
+        else aux (elements_left - 1) t
+      | _ -> raise (Failure out_of_bound_msg)
+    in
+    aux ind l
+
+
 let rec last (l: 'a list) = match l with
     [] -> None
   | [el] -> Some el
@@ -307,7 +332,7 @@ let insert_at (el: 'a) (pos: int) (l: 'a list) =
   aux pos l [] 
 
 
-let range (start_number : int) (end_number : int) =
+let range (start_number: int) (end_number: int) =
 
   let decrement el = el - 1 and
   increment el = el + 1 and
@@ -324,8 +349,55 @@ let range (start_number : int) (end_number : int) =
     let mod_func = decrement in aux end_number start_number mod_func []
 
 
+let rand_select (l: 'a list) (elements_num: int) =
+  if elements_num <= 0 then [] 
+  else let len = List.length l in
+    let rec find_out (el: int) (acc: int list) alter_func =
+      if (el >= len) || (el < 0) then -1
+      else let found_ind = find_first el acc in
+        if found_ind = -1 then el
+        else find_out (alter_func el) acc alter_func
+    in
+    let incr (el: int) = el + 1 and decr (el: int) = el - 1 
+    in
+    let find_new_el (old_el: int) (acc: int list) =
+      let new_el = find_out old_el acc incr in
+      if new_el <> -1 then new_el 
+      else let new_el = find_out old_el acc decr in
+        if new_el <> -1 then new_el
+        else -1
+    in 
+    let rec select_rand_indices (elements_num: int) (acc: int list) =
+      if elements_num <= 0 then acc
+      else let rand_el = (Random.int (len - 1)) + 1 in
+        begin
+            let found_ind = find_first rand_el acc in
+            if found_ind = -1 then 
+              select_rand_indices (elements_num - 1) (rand_el::acc)
+            else 
+              let new_el = find_new_el rand_el acc in
+              if new_el = -1 then 
+                raise (Failure "A new random element cannot be found")
+              else select_rand_indices (elements_num - 1) (rand_el::acc)
+        end
+    in
+    let elements_num_to_select = 
+      if elements_num > len then len else elements_num in
+    let rec select_with_given_indices 
+        (l: 'a list) (indices: int list) (acc: 'a list) =
+        match indices with
+            [] -> acc
+          | h :: t -> 
+            let el_selected = select_at h l in
+            select_with_given_indices l t (el_selected :: acc)
+    in
+    Random.self_init ;
+    let indices = select_rand_indices elements_num_to_select [] in
+    select_with_given_indices l indices []
+
+
 let main () =
-  ()
+  rand_select ["a";"b";"c"] 3
 ;; 
 
 main();;

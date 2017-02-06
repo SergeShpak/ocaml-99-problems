@@ -385,6 +385,53 @@ let test_ListsRange_IfStartEqualsEndReturnsListWithSingleElement ctx =
   let result = Lists.range s e in
   assert_equal expected_result result
 
+
+let test_ListsRandSelect_SelectsCorrectNumberOfElements ctx = 
+  let target_array = ["a";"b";"c";"d";"e";"f";"g";"h"] and 
+  first_number_of_elements = 3 and second_number_of_elements = 8 in
+  let clos num = Lists.rand_select target_array num in
+  let first_result = clos first_number_of_elements and 
+  second_result = clos second_number_of_elements in
+  assert_equal first_number_of_elements (List.length first_result) ;
+  assert_equal second_number_of_elements (List.length second_result)
+
+let test_ListsRandSelect_IfNumberOfElementsIsZeroReturnsEmpty ctx =
+  let target_array = ["a";"b"] and number_of_elements = 0 in
+  let result = Lists.rand_select target_array number_of_elements in
+  assert_equal number_of_elements (List.length result)
+
+let test_ListsRandSelect_IfNumberOfElementsIsNegativeReturnsEmpty ctx =
+  let target_array = ["a";"b"] and number_of_elements = -1 and
+  expected_number_of_elements = 0 in
+  let result = Lists.rand_select target_array number_of_elements in
+  assert_equal expected_number_of_elements (List.length result)
+
+let test_ListsRandSelect_IfNumberIsOfutOfBoundReturnsListOfOriginalLength ctx =
+  let target_array = ["a";"b";"c"] and number_of_elements = 4 and
+  expected_number_of_elements = 3 in
+  let result = Lists.rand_select target_array number_of_elements in
+  assert_equal expected_number_of_elements (List.length result)
+
+let test_ListsRandSelect_IfLengthsEqualReturnsPermutation ctx =
+  let target_array = ["a";"b";"c"] and number_of_elements = 3 in
+  let result = Lists.rand_select target_array number_of_elements in
+  let rec aux original result =
+    let find_and_drop l el =
+      let rec find l id =
+        match l with
+          [] -> -1
+        | h::t -> if h = el then id else find t (id + 1) in
+      let idx = find l 1 in
+      if idx = (-1) then l else Lists.drop l idx
+    in
+    match result with
+      [] -> (original, result)
+    | hd::t -> aux t (find_and_drop original hd)
+  in
+  let drop_result = aux target_array result in
+  assert_equal (fst drop_result) (snd drop_result)
+
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
@@ -498,6 +545,21 @@ let suite =
     "Lists.range: If start is equal to end creates a list with a single "
     ^ "element, equal to start">::
         test_ListsRange_IfStartEqualsEndReturnsListWithSingleElement ;
+    "Lists.rand_select: Select a correct number of elements">::
+        test_ListsRandSelect_SelectsCorrectNumberOfElements ;
+    "Lists.rand_select: If number of elements to select is 0, returns "
+    ^ "an empty array">::
+        test_ListsRandSelect_IfNumberOfElementsIsZeroReturnsEmpty ;
+    "Lists.rand_select: If number of elements to select is negative, returns "
+    ^ "an empty array">::
+        test_ListsRandSelect_IfNumberOfElementsIsNegativeReturnsEmpty ;
+    "Lists.rand_select: If number of elements to select is bigger than the "
+    ^ "length of the array, returns an array of the same length as the "
+    ^ "original one">::
+        test_ListsRandSelect_IfNumberIsOfutOfBoundReturnsListOfOriginalLength ;
+    "Lists.rand_select: If number of elements to select is equal to the "
+    ^ "length of the original array, returns a permutation">::
+        test_ListsRandSelect_IfLengthsEqualReturnsPermutation ;
   ]
 ;;
 
