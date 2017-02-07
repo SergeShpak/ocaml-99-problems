@@ -353,7 +353,7 @@ let rand_select (l: 'a list) (elements_num: int) =
   if elements_num <= 0 then [] 
   else let len = List.length l in
     let rec find_out (el: int) (acc: int list) alter_func =
-      if (el >= len) || (el < 0) then -1
+      if (el > len) || (el <= 0) then -1
       else let found_ind = find_first el acc in
         if found_ind = -1 then el
         else find_out (alter_func el) acc alter_func
@@ -378,7 +378,7 @@ let rand_select (l: 'a list) (elements_num: int) =
               let new_el = find_new_el rand_el acc in
               if new_el = -1 then 
                 raise (Failure "A new random element cannot be found")
-              else select_rand_indices (elements_num - 1) (rand_el::acc)
+              else select_rand_indices (elements_num - 1) (new_el::acc)
         end
     in
     let elements_num_to_select = 
@@ -393,11 +393,12 @@ let rand_select (l: 'a list) (elements_num: int) =
     in
     Random.self_init ;
     let indices = select_rand_indices elements_num_to_select [] in
-    select_with_given_indices l indices []
+    let result = select_with_given_indices l indices [] in
+    rev result
 
 
 let main () =
-  rand_select ["a";"b";"c"] 3
+  ()
 ;; 
 
 main();;

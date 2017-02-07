@@ -15,6 +15,14 @@ let list_to_string (l: string list) =
     in
     wrap_in_brackets (aux l "")
 
+let find_in_list (el: 'a) (l: 'a list) =
+  let rec aux (l: 'a list) (pos: int) =
+    match l with
+      [] -> -1
+    | h :: t -> 
+      if h = el then pos
+      else aux t (pos + 1) in
+  aux l 1
 
 let test_ListsLast_ReturnsLastElement ctx = 
   assert_equal (Some "d") (Lists.last [ "a" ; "b" ; "c" ; "d"])
@@ -415,21 +423,8 @@ let test_ListsRandSelect_IfNumberIsOfutOfBoundReturnsListOfOriginalLength ctx =
 let test_ListsRandSelect_IfLengthsEqualReturnsPermutation ctx =
   let target_array = ["a";"b";"c"] and number_of_elements = 3 in
   let result = Lists.rand_select target_array number_of_elements in
-  let rec aux original result =
-    let find_and_drop l el =
-      let rec find l id =
-        match l with
-          [] -> -1
-        | h::t -> if h = el then id else find t (id + 1) in
-      let idx = find l 1 in
-      if idx = (-1) then l else Lists.drop l idx
-    in
-    match result with
-      [] -> (original, result)
-    | hd::t -> aux t (find_and_drop original hd)
-  in
-  let drop_result = aux target_array result in
-  assert_equal (fst drop_result) (snd drop_result)
+  let sorted_result = List.sort compare result in
+  assert_equal sorted_result target_array 
 
 
 let suite = 
