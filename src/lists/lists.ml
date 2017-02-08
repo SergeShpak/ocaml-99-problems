@@ -391,10 +391,31 @@ let rand_select (l: 'a list) (elements_num: int) =
             let el_selected = select_at h l in
             select_with_given_indices l t (el_selected :: acc)
     in
-    Random.self_init ;
+    Random.self_init ();
     let indices = select_rand_indices elements_num_to_select [] in
     let result = select_with_given_indices l indices [] in
     rev result
+
+
+let lotto_select (number_of_els: int) (boundary: int) =
+  let rec select_random_elems (number_left: int) (acc: int list) =
+    if number_left <= 0 then acc
+    else
+      let rand_el = (Random.int (boundary - 1)) + 1 in
+      select_random_elems (number_left - 1) (rand_el::acc)
+  in
+  if number_of_els <= 0 || boundary <= 0 then
+    [] else
+  if boundary = 1 then replicate [1] number_of_els
+  else 
+    begin
+      Random.self_init () ;
+      select_random_elems number_of_els []
+    end   
+
+
+let permutation (l: 'a list) =
+  []
 
 
 let main () =

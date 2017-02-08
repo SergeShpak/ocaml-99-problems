@@ -427,6 +427,62 @@ let test_ListsRandSelect_IfLengthsEqualReturnsPermutation ctx =
   assert_equal sorted_result target_array 
 
 
+let test_LottoSelect_SelectsCorrectNumberOfElements ctx =
+  let target_number_of_els = 6 and boundary = 49 in
+  let result = Lists.lotto_select target_number_of_els boundary in
+  let result_len = List.length result in
+  assert_equal result_len target_number_of_els
+
+let test_LottoSelect_SelectedElementsAreGreaterThanZero ctx = 
+  let target_number_of_els = 40 and boundary = 3 in
+  let result = Lists.lotto_select target_number_of_els boundary in
+  let rec is_all_gt_zero (l: int list) =
+    match l with
+      [] -> true
+    | h::t -> 
+      if h < 1 then false
+      else is_all_gt_zero t
+  in
+  let is_gt_zero = is_all_gt_zero result in
+  assert_bool "Some elements are smaller than zero" is_gt_zero
+
+let test_LottoSelect_SelectedElementsAreLEThanBoundary ctx = 
+  let target_number_of_els = 40 and boundary = 3 in
+  let result = Lists.lotto_select target_number_of_els boundary in
+  let rec is_all_le_boundary (l: int list) =
+    match l with
+      [] -> true
+    | h::t ->
+      if h > boundary then false
+      else is_all_le_boundary t
+  in
+  let is_le_boundary = is_all_le_boundary result in
+  assert_bool "Some elements are great than the boundary" is_le_boundary
+
+let test_LottoSelect_IfNumberOfElementsIsLEZeroReturnsEmpty ctx =
+  let first_target_number_of_els = 0 and second_target_number_of_els = -4 and
+  boundary = 10 and expected_result = [] in
+  let first_result = Lists.lotto_select first_target_number_of_els boundary and
+    second_result = Lists.lotto_select second_target_number_of_els boundary in
+  assert_equal expected_result first_result ;
+  assert_equal expected_result second_result
+
+let test_LottoSelect_IfBoundaryIsLEZeroReturnsEmpty ctx =
+  let number_of_elements = 10 and first_boundary = 0 and 
+  second_boundary = -4 and expected_result = [] in
+  let first_result = Lists.lotto_select number_of_elements first_boundary and
+    second_result = Lists.lotto_select number_of_elements second_boundary in
+  assert_equal expected_result first_result ;
+  assert_equal expected_result second_result
+
+
+let test_Permutation_ReturnsListWithSameElements ctx =
+  let target_list = ["a"; "b"; "c"; "d"; "e"; "f"] in
+  let result = Lists.permutation target_list in
+  let sorted_result = List.sort compare result in
+  assert_equal target_list sorted_result
+
+
 let suite = 
   "suite">:::
   ["Lists.last: Returns last element">:: test_ListsLast_ReturnsLastElement ;
@@ -555,7 +611,21 @@ let suite =
     "Lists.rand_select: If number of elements to select is equal to the "
     ^ "length of the original array, returns a permutation">::
         test_ListsRandSelect_IfLengthsEqualReturnsPermutation ;
-  ]
+    "Lists.lotto_select: Selects correct number of elements">::
+        test_LottoSelect_SelectsCorrectNumberOfElements ;
+    "Lists.lotto: all selected elements are greater than zero">::
+        test_LottoSelect_SelectedElementsAreGreaterThanZero ;
+    "Lists.lotto_select: all selected elements are less than the boundary">:: 
+        test_LottoSelect_SelectedElementsAreLEThanBoundary ;
+    "Lists.lotto_select: If number of elements to select is less than one, "
+    ^ "returns an empty list">::
+        test_LottoSelect_IfNumberOfElementsIsLEZeroReturnsEmpty ;
+    "Lists.lotto_select: If boundary is less than one, returns an empty" 
+    ^ "list">::
+        test_LottoSelect_IfBoundaryIsLEZeroReturnsEmpty ;
+    "Lists.permutation: Permutates list correctly">::
+        test_Permutation_ReturnsListWithSameElements ;
+    ]
 ;;
 
 let () =

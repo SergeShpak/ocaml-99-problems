@@ -27,3 +27,5 @@ val remove_at : int -> 'a list -> 'a list
 val insert_at : 'a -> int -> 'a list -> 'a list
 val range : int -> int -> int list
 val rand_select : 'a list -> int -> 'a list
+val lotto_select : int -> int -> int list
+val permutation: 'a list -> 'a list
