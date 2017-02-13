@@ -52,12 +52,15 @@ let select_at (ind: int) (l: 'a list) =
     aux ind l
 
 
+(** Returns last element of a given list. If list is empty, returns None.*)
 let rec last (l: 'a list) = match l with
     [] -> None
   | [el] -> Some el
   | h :: t -> last t
 
 
+(** Returns last two elements of a given list. If the list contains less than
+    two elements, returns None. *)
 let rec last_two (l: 'a list) = match l with
     [] -> None
   | [el] -> None
