@@ -52,15 +52,15 @@ let select_at (ind: int) (l: 'a list) =
     aux ind l
 
 
-(** Returns last element of a given list. If list is empty, returns None.*)
+(** Returns last element of a given list. If list is empty, returns None. *)
 let rec last (l: 'a list) = match l with
     [] -> None
   | [el] -> Some el
   | h :: t -> last t
 
 
-(** Returns last two elements of a given list. If the list contains less than
-    two elements, returns None. *)
+(** Returns the last two elements of a given list. 
+    If the list contains less than two elements, returns None. *)
 let rec last_two (l: 'a list) = match l with
     [] -> None
   | [el] -> None
@@ -68,6 +68,8 @@ let rec last_two (l: 'a list) = match l with
   | head :: tail -> last_two tail
 
 
+(** Returns the element of a list at the given position. Indexing begins 
+    with 1. If the given index is out of bound, returns None. *)
 let rec at (i: int) (l: 'a list) =
   if i < 1 then None
   else 
@@ -78,6 +80,7 @@ let rec at (i: int) (l: 'a list) =
       | _ -> at (i - 1) t 
 
 
+(** Returns number of elements in a given list. *)
 let length (l: 'a list) =
     let rec aux (l: 'a list) (acc: int) = match l with
         [] -> acc
@@ -86,7 +89,7 @@ let length (l: 'a list) =
     in
     aux l 0
 
-
+(** Reverses a given list. *)
 let rev (l: 'a list) =
   let rec aux (l: 'a list) (acc: 'a list) = match l with
       [] -> acc
@@ -94,7 +97,8 @@ let rev (l: 'a list) =
   in
   aux l []
 
-
+(** Checks if a given list is a palindrome (i.e. the list is equal 
+    to the reversed itself). *)
 let is_palindrome (l: 'a list) = match l with
     [] -> false
   | _ -> l = rev l
