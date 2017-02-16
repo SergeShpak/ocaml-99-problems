@@ -104,6 +104,9 @@ let is_palindrome (l: 'a list) = match l with
   | _ -> l = rev l
 
 
+(** Moves all elements of the sub lists, contained in a given list, to their 
+    parent lists, so after the operation, there are no sublists in the list. 
+    For example, [ [a] ; [b] ] -> [ a; b ]. *)
 let rec flatten (nodes: 'a node list) =
   let rec aux (nodes: 'a node list) (acc: 'a list) =
     match nodes with
@@ -115,6 +118,8 @@ let rec flatten (nodes: 'a node list) =
   aux nodes []
 
 
+(** Deletes consecutive repeating elements in the list: 
+    [ a; a; b ] -> [ a; b]. *)
 let compress (l: 'a list) =
   let rec aux (l: 'a list) (acc: 'a list) = match l with
       [] -> acc
