@@ -131,6 +131,7 @@ let compress (l: 'a list) =
   List.rev (aux l [])
 
 
+(** Packs consecutive duplicates into sublists. *)
 let pack (l: 'a list) =
   let rec aux (l: 'a list) (acc: 'a list list) (curr_sublist: 'a list) = 
     match l with
@@ -144,6 +145,15 @@ let pack (l: 'a list) =
   aux l [] []
 
 
+(** Performs a run-length encoding of a given list. Returns a list that
+    consists of elements of type One (if the element was not a duplicate),
+    or Many (if consecutive duplicates were encoded). Type Many has information
+    on the encoded element and the number of duplicates of this element before
+    encoding.
+
+    Example: ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"] ->
+                [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d";
+                Many (4, "e")] *)
 let encode (l: 'a list) =
   let rec aux (l: 'a list) (acc: 'a rle list) (cur: 'a rle option) =
     match l with 
@@ -172,7 +182,11 @@ let encode (l: 'a list) =
   in
   rev (aux l [] None)  
 
+(** Performs a run-length decding of a given list.
 
+    Example: [Many (4,"a"); One "b"; Many (2,"c"); Many (2,"a"); One "d"; 
+                Many (4,"e")] ->
+            ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"] *)
 let decode(l: 'a rle list) =
 
   let rec clone_el (el: 'a) (times_to_clone: int) (acc: 'a list) : 'a list =
