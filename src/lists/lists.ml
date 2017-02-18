@@ -212,6 +212,7 @@ let decode(l: 'a rle list) =
     rev (aux l [])
 
 
+(** Duplicates the elements of a given list. *)
 let duplicate (l: 'a list) =
 
   let rec aux (l: 'a list) (acc: 'a list) =
@@ -223,6 +224,7 @@ let duplicate (l: 'a list) =
   aux l []
 
 
+(** Replicates the elements of a given list a given number of times.  *)
 let replicate (l: 'a list) (times: int) =
 
   let rec aux (l: 'a list) (acc: 'a list) (counter: int) =
@@ -238,6 +240,7 @@ let replicate (l: 'a list) (times: int) =
   aux l [] times
 
 
+(** Drops every element of a list of a given index. Indexing starts with 1. *)
 let drop (l: 'a list) (index: int) =
 
   let rec aux (l: 'a list) (acc: 'a list) (counter: int) =
@@ -256,6 +259,11 @@ let drop (l: 'a list) (index: int) =
   aux l [] 1
 
 
+(** Splits a list into two parts; the first part's length is passed as the 
+    second parameter. If the given length is less or equal than zero, 
+    returns an empty and the original lists. If the given length is greater
+    than the length of the given list, returns the original and an empty
+    lists. *)
 let split (l: 'a list) (first_part_length: int) = 
 
   let rec aux (l: 'a list) (acc: 'a list) (counter: int) =
