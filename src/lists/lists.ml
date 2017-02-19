@@ -281,6 +281,13 @@ let split (l: 'a list) (first_part_length: int) =
     aux l [] first_part_length
 
 
+(** Extracts a slice from a given list. Returns the part of the list bounded
+    by the indices start_ind and end_ind (including). Indexing starts from 
+    zero. If the first index is greater than the second one, swaps the indices.
+    If an index is negative, than the difference between the length of the list
+    and the absolute value of the index is considered. If an index is greater
+    or equal to the length of list, returns the suffix of the list, starting 
+    from the smaller index. *)
 let slice (l: 'a list) (start_ind: int) (end_ind: int) =
 
   let rec skip_n (l: 'a list) (n: int) =
