@@ -324,6 +324,10 @@ let slice (l: 'a list) (start_ind: int) (end_ind: int) =
   get_n (skip_n l start_ind) (end_ind - start_ind) []
 
 
+(** Rotates a given list. If the given index is positive, performs left 
+    rotation; in case of a negative index, performs right rotation.
+    If rotation index is greater than the length of a given list, the rotation
+    index is taken modulo the length. *)
 let rec rotate (l: 'a list) (rot_ind: int) =
   let rec left_rot (l: 'a list) (rot_ind: int) (acc: 'a list) =
     match l with
@@ -345,6 +349,10 @@ let rec rotate (l: 'a list) (rot_ind: int) =
   left_rot l norm_rot_ind []
 
 
+(** Removes element from the list at a given position. Indexing starts with
+    zero. If index is negative, the position is calculated as the difference 
+    between the length of the list and the absolute value of the given index.
+*)
 let remove_at (pos: int) (l: 'a list) =
   let rec aux (l: 'a list) (count: int) (acc: 'a list) =
     match l with
@@ -359,6 +367,11 @@ let remove_at (pos: int) (l: 'a list) =
   else aux l pos []
 
 
+(** Inserts an element el into a given list l at a given position pos. Indexing
+    begins with zero. If the index is negative, position is calculated from
+    the rear of the list (e.g. if pos = -1, then the new element is inserted as
+    the last element). If the given index is out of the list's bound, the 
+    original list is returned. *)
 let insert_at (el: 'a) (pos: int) (l: 'a list) =
   let rec aux (count: int) (l: 'a list) (acc: 'a list) =
     match l with 
@@ -373,6 +386,10 @@ let insert_at (el: 'a) (pos: int) (l: 'a list) =
   aux pos l [] 
 
 
+(** Returns a range of integers, bounded by the two given numbers. 
+    The numbers are included in the range. Depending on the order of the start
+    and the end number, the resulting range can be ascending or descending 
+    (the range always starts with start_number and ends with end_number). *)
 let range (start_number: int) (end_number: int) =
 
   let decrement el = el - 1 and
