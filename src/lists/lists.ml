@@ -455,6 +455,8 @@ let rand_select (l: 'a list) (elements_num: int) =
     rev result
 
 
+(** Returns a list composed of N elements (where N = number_of_els) chosen
+    randomly from the numbers in the range [1..boundary]. *)
 let lotto_select (number_of_els: int) (boundary: int) =
   let rec select_random_elems (number_left: int) (acc: int list) =
     if number_left <= 0 then acc
