@@ -1,8 +1,11 @@
+(** Type used for representing elements of lists, that can be either simple
+    elements (One) or sublists (Many). *)
 type 'a node =
     | One of 'a
     | Many of 'a node list
 
 
+(** Type used for run-length encoding of lists. *)
 type 'a rle =
   | RLEOne of 'a
   | RLEMany of (int * 'a)
