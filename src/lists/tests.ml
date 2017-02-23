@@ -75,7 +75,7 @@ let test_ListsRev_EmptyListStaysSame ctx =
 let test_ListsIsPalindrome_RecognizesPalindrome ctx =
   let palindrome_to_check = ["x" ; "a" ; "m" ; "a" ; "x" ] 
   and not_palindrome_to_check = [ "a" ; "b" ] in
-  assert_bool ((list_to_string palindrome_to_check) ^ " is not palindrome") 
+  assert_bool ((list_to_string palindrome_to_check) ^ " is not a palindrome") 
     (Lists.is_palindrome palindrome_to_check) ;
   assert_equal false (Lists.is_palindrome not_palindrome_to_check)
 

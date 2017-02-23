@@ -121,7 +121,7 @@ let rec flatten (nodes: 'a node list) =
   aux nodes []
 
 
-(** Deletes consecutive repeating elements in the list: 
+(** Deletes elements that repeat consecutively from the list: 
     [ a; a; b ] -> [ a; b]. *)
 let compress (l: 'a list) =
   let rec aux (l: 'a list) (acc: 'a list) = match l with
